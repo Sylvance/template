@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./tmp/data:/var/lib/postgresql/data
+    environment:
+      PGDATA: /var/lib/postgresql/data/template/
+      POSTGRES_PASSWORD: password
+
+  web:
+    build: .
+    volumes:
+      - .:/usr/src/template
+    command: ["server"]
+    ports:
+      - 3000:3000
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - TEMPLATE_DATABASE_HOST=db
+      - TEMPLATE_DATABASE_USERNAME=postgres
+      - TEMPLATE_DATABASE_PASSWORD=password
+    depends_on:
+      - db
+      - redis
