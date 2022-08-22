@@ -45,3 +45,7 @@ lib/assets/.keep
 lib/tasks/.keep
 log/.keep
 storage/.keep
+.vscode/configurationCache.log
+.vscode/dryrun.log
+.vscode/settings.json
+.vscode/targets.log

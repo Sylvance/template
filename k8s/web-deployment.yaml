@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.26.1 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: web
+  name: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: web
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.26.1 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: web
+    spec:
+      containers:
+        - args:
+            - server
+          env:
+            - name: REDIS_URL
+              value: redis://redis:6379
+            - name: TEMPLATE_DATABASE_HOST
+              value: db
+            - name: TEMPLATE_DATABASE_PASSWORD
+              value: password
+            - name: TEMPLATE_DATABASE_USERNAME
+              value: postgres
+          image: registry.me:3808/elections:latest
+          name: web
+          ports:
+            - containerPort: 3000
+          resources: {}
+          volumeMounts:
+            - mountPath: /usr/src/template
+              name: web-claim0
+      restartPolicy: Always
+      volumes:
+        - name: web-claim0
+          persistentVolumeClaim:
+            claimName: web-claim0
+status: {}
