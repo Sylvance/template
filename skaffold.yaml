@@ -1,0 +1,27 @@
+apiVersion: skaffold/v2beta29
+kind: Config
+metadata:
+  name: elections
+build:
+  tagPolicy:
+    sha256: {}
+  artifacts:
+  - image: registry.me:3808/elections
+    docker:
+      dockerfile: Dockerfile
+      buildArgs:
+        SSH_PRIVATE_KEY: "{{ .SSH_PRIVATE_KEY }}"
+    sync:
+      infer:
+      - '/*/*.rb'
+      - '/*/*.rb'
+deploy:
+  kubectl:
+    manifests:
+    - k8s/deployment.yaml
+    - k8s/service.yaml
+portForward:
+  - resourceType: service
+    resourceName:  elections22-service
+    port: 3000
+    localPort: 9000

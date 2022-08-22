@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elections22-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elections22
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: elections22
+    spec:
+      containers:
+      - name: elections22
+        args:
+          - server
+        env:
+          - name: REDIS_URL
+            value: redis://redis:6379
+          - name: TEMPLATE_DATABASE_HOST
+            value: db
+          - name: TEMPLATE_DATABASE_PASSWORD
+            value: password
+          - name: TEMPLATE_DATABASE_USERNAME
+            value: postgres
+        image: registry.me:3808/elections
+        resources:
+          requests:
+            memory: "32Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3000
