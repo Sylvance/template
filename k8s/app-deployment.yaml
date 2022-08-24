@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: elections22-deployment
+  name: elections-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: elections22
+      app: elections
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: elections22
+        app: elections
     spec:
       containers:
-      - name: elections22
+      - name: elections
         args:
           - server
         env:
           - name: REDIS_URL
             value: redis://redis:6379
           - name: TEMPLATE_DATABASE_HOST
-            value: db
+            value: db-service
           - name: TEMPLATE_DATABASE_PASSWORD
             value: password
           - name: TEMPLATE_DATABASE_USERNAME

@@ -25,5 +25,18 @@ run:
 	rails s
 
 .PHONY: dev
-dev:
+dev: 
 	SSH_PRIVATE_KEY=`cat ~/.ssh/id_rsa` skaffold dev --no-prune=false --cache-artifacts=false
+
+.PHONY: pods
+pods:
+	kubectl get pods
+
+.PHONY: appshell
+appshell:
+	echo "Attempting to enter the shell ..."
+	kubectl exec -it $(pod) -- /bin/bash
+
+.PHONY: dbshell
+dbshell:
+	kubectl exec -it $(pod) -- psql -h localhost -U postgres --password -p 5432 db
